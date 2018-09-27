@@ -1,0 +1,76 @@
+文件发开/关闭
+fs.open()
+
+
+追加文件内容
+fs.appendFile(file, data[, options], callback)
+
+file：可以是文件路径，也可以是文件句柄。（还可以是buffer？）
+data：要追加的内容。string或者buffer。
+options
+encoding：编码，默认是utf8
+mode：默认是0o666
+flag：默认是a
+注意：如果file是文件句柄，那么
+
+开始追加数据前，file需要已经打开。
+file需要手动关闭。
+var fs = require('fs');
+
+fs.appendFile('./extra/fileForAppend.txt', 'helo', 'utf8', function(err){
+    if(err) throw err;
+    console.log('append成功');
+});
+
+
+文件内容截取
+fs.truncate(path, len, callback) fs.truncateSync(path, len)
+
+fs.ftruncate(fd, len, callback) fs.ftruncateSync(fd, len)
+
+用途参考linux说明文档。
+
+要点：
+
+offset不会变化。比如通过fs.read()读取文件内容，就需要特别注意。
+如果len小于文件内容长度，剩余文件内容部分会丢失；如果len大于文件内容长度，那么超出的部分，会用\0进行填充。
+如果传的是文件路径，需要确保文件是可写的；如果传的是文件句柄，需要确保文件句柄已经打开并且可写入。
+The truncate() and ftruncate() functions cause the regular file named by path or referenced by fd to be truncated to a size of precisely length bytes.
+
+If the file previously was larger than this size, the extra data is lost. If the file previously was shorter, it is extended, and the extended part reads as null bytes ('\0').
+
+The file offset is not changed.
+
+With ftruncate(), the file must be open for writing; with truncate(), the file must be writable.
+
+
+
+修改文件属性（时间）
+path/fd：文件路径/文件句柄
+atime：Access Time。上一次访问文件数据的时间。
+mtime：Modified Time。修改时间。
+fs.utimes(path, atime, mtime, callback) fs.utimesSync(path, atime, mtime)
+
+fs.futimes(fd, atime, mtime, callback) fs.futimesSync(fd, atime, mtime)
+
+备注，在命令行下可以
+
+通过stat查看文件的状态信息，包括了上面的atime、mtime。
+通过touch修改这几个时间。
+
+
+
+创建文件链接
+fs.symlink(target, path[, type], callback) fs.symlinkSync(target, path[, type])
+
+fs.link(srcpath, dstpath, callback) fs.linkSync(srcpath, dstpath)
+
+link() creates a new link (also known as a hard link) to an existing file.
+
+软链接、硬链接区别：参考 或者 [这个]。(http://www.cnblogs.com/itech/archive/2009/04/10/1433052.html)
+
+硬链接：inode相同，多个别名。删除一个硬链接文件，不会影响其他有相同inode的文件。
+软链接：有自己的inode，用户数据块存放指向文件的inode。
+参考这里。
+
+
