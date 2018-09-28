@@ -1,5 +1,5 @@
 /**
- * fs.watch() 比 fs.watchFile()高效跟多  （why？）
+ * fs.watch() vs fs.watchFile()高效更多  （why？）
 */
 var fs = require('fs');
 /**

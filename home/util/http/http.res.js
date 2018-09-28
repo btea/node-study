@@ -1,5 +1,5 @@
 /**
- * http模块四剑客之一
+ * serverRes  http模块四剑客之一
  * 一个web服务程序，接收到来自客户端的http请求后，向客户端返回正确的响应内容，这就是res的职责。
  * 返回的内容包括：状态代码/状态描述信息、响应头部、响应主体
  * 
@@ -21,8 +21,11 @@ console.log(data);
      });
     //  res.setHeader('Content-Type','text/html;charset=utf-8');
     //  res.write('<p style="color:#6cf;">一个段落 this is a word</p>','utf8');
-    res.write(data);
-     res.end('hello')
+    // res.write(data);
+    // res.end('hello')
+    console.log(data.length);
+    console.log(data[0]);
+    res.end(data);
  });
  server.listen(3000)
 

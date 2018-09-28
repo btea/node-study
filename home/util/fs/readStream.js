@@ -3,8 +3,8 @@
 */
 var fs = require('fs');
 // var readStrem = fs.createReadStream('./file.txt','utf8');
-// var readStrem = fs.createReadStream('../../file/7.xls','utf8');
-var readStrem = fs.createReadStream('../../main.js','utf8');
+var readStrem = fs.createReadStream('../../file/7.xls','utf8');
+// var readStrem = fs.createReadStream('../../main.js','utf8');
 
 readStrem.on('data',function(chunk){
     console.log('读取数据：'+chunk);

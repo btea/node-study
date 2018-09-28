@@ -11,7 +11,8 @@
      console.log('2、http版本：'+req.httpVersion);
      console.log('3、http请求方法：'+req.method);
      console.log('4、http请求头部：'+ JSON.stringify(req.headers));
-     res.end('ok');
+    //  res.end('ok');
+    res.end();
  })
 
  server.listen(3000);
@@ -22,7 +23,7 @@
 
 
  /**
-  * http.IncomingMessage的属性/方法/事件
+  * http.IncomingMessage的属性/方法/事件   serverReq/clientRes 都是http.IncomingMessage实例
   *   类型     名称          服务端   客户端
   *   事件    aborted        true     true
   *   事件     close         true     true

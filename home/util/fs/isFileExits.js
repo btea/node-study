@@ -5,7 +5,7 @@
  * fs.access()除了判断文件是否存在（默认模式），还可以用来判断文件的权限
  * 
  * 备忘：fs.constants.F_OK等常量无法获取（node v6.1，mac 10.11.4下，fs.constants是undefined）
- * (node v8.11.3,win10 下, fs.contants可以取值)
+ * (本人测试 node v8.11.3,win10 下, fs.contants可以取值)
 */
 
 

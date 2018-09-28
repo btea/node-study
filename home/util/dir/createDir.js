@@ -9,7 +9,9 @@
  */
 var fs = require('fs');
 fs.mkdir('./hello',function(err){
-    if(err) throw err;
+    if(err) {
+        return err;
+    };
     console.log('目录创建成功');
 })
 
@@ -19,7 +21,15 @@ fs.mkdir('./hello',function(err){
 try{
     fs.mkdirSync('./world');
 }catch(err){
-    console.log('world已经存在');
+    
+    fs.access('./world',function(err){
+        if(err) throw err;
+        console.log('world已经存在');
+        fs.rmdirSync('./world');
+        console.log('world删除成功');
+    })
+    
+    
 }
 
 
@@ -42,3 +52,13 @@ try{
 /**
  * 删除文件 fs.unlink  fs.unlinkSync
 */
+
+/**
+ * 创建一个文件,创建成功，但创建出来的是一个a.js为名的文件夹
+*/
+try{
+    fs.mkdirSync('a.js');
+    console.log('成功创建一个js文件')
+}catch(err){
+    console.log('创建js文件失败')
+}
