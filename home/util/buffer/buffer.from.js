@@ -1,5 +1,11 @@
 /**
  * Buffer.from()
+ * Buffer.from(array)返回一个新建的包含所提供的字节数组副本的Buffer。
+ * Buffer.from(arrayBuffer[,byteOffset[,length]])返回一个新建的与给定的ArrayBuffer共享同一内存的Buffer。
+ * Buffer.from(buffer)返回一个新建的包含所提供的字符串的副本的Buffer。
+ * Buffer.from(string[,encoding])返回一个新建的包含的所提供的字符串的副本的Buffer。
+ * Buffer.alloc(size[,fill[,encoding]])返回一个指定大小的被填满的Buffer实例。这个方法会明显的比Buffer.allocUnsafe(size)慢，但可确保新创建的Buffer实例绝对不会包含旧的和潜在的敏感数据。
+ * Buffer.allocUnsafe(size)与Buffer.allocUnsafeSlow(size)返回一个新建的指定size的Buffer，但它的内容必须被初始化，可以使用buf.fill(0)或者完全写满
  */
 
 /**

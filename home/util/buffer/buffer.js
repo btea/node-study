@@ -1,12 +1,15 @@
 /**
  * Buffer是node模块的核心模块，开发者可以用它来处理二进制数据，比如文件流的读写，网络请求数据的处理等。
  * Buffer的API非常多，以下列举一些常用和容易理解的api，包括Buffer实例的创建、比较、连接、拷贝、查找、遍历、类型转换、截取，编码转换等。
+ * http://nodejs.cn/api/buffer.html
  */
 
 /**
  * 创建
  * alloc（分配）
- * new Buffer(array)
+ * new Buffer(array) 
+ *  因为new Buffer()的行为会根据所传入的第一个参数的值得数据类型而明显的改变，所以如果应用程序没有正确的校验传给new Buffer()的参数、或未能正确初始化新分配Buffer的内容，就有可能在无意中
+ *  为代码引入安全性与可靠性问题。为了使Buffer实例的创建更加可靠、更不容易出错，各种new Buffer()函数已被废弃，并由以下方法替代：
  * Buffer.alloc(length)
  * Buffer.allocUnsafe(length)
  * Buffer.from(array)
@@ -39,3 +42,6 @@ var buf4 = Buffer.from([1,2,3]); // 长度为3的buffer，初始值为0x01,0x02,
 console.log(buf4);
 buf4[0] = 0x0a; // 修改buffer的值，可以直接赋值10进制，也可赋值16进制，默认会进行相应转换
 console.log(buf4);
+
+
+console.log('version',process.version);

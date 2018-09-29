@@ -20,3 +20,7 @@ var buf5 = Buffer.from('ABC');  // <Buffer 41 42 43>
 var buf6 = Buffer.from('414243', 'hex');
 
 console.log(buf5.equals(buf6)); // true
+
+var buf7 = [0x01,0x02,0x03];
+var buf8 = Buffer.from(buf7);
+console.log(buf8.equals(buf7));
