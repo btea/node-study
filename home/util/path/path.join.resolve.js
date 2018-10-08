@@ -17,5 +17,5 @@ module.exports.join = function(){
     var paths = Array.prototye.slice.call(arguments, 0);
     return this.normalize( paths.join('/') );
 };
-
+// http://nodejs.cn/api/path.html#path_path_normalize_path
 console.log(path.normalize("/foo/bar/baz/asdf/quux/.."));
