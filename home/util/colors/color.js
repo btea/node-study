@@ -32,13 +32,10 @@ var str = `
 |    Normal     |  Black |   Red  | Green  | Yellow |  Blue  |Magenta |  Cyan  |  White | 
 -----------------------------------------------------------------------------------------`;
 
-console.log(str);
-str.replace(/\n/g,'/                 ');
-console.log(str.match(/\n/g));
 const styles = {
     black: ["\x1b[30;4m"],
     red: ["\x1b[31m"],
-    green: ["\x1b[32;4m"],
+    green: ["\x1b[32;4;1;3m"],
     yellow: ["\x1b[33m"],
     blue: ["\x1b[34;4m"],
     magenta: ["\x1b[35m"],

@@ -7,75 +7,30 @@
  *  自动完成：比如输入npm，自动提示"help init install"。
  *  命令行工具：比如npm init这种问答式的脚手架工具。
 */
-
-var MD5 = require('md5');
-var $ = require('jquery');
-console.log($);
-var appid = '20170825000076973';
-// 我的appid
-// var key = '12345678';
-var key = 'liOElrAvfuetesvJgyJZ';
-var salt = (new Date).getTime();;
-var obj = {
-    wyw: '文言文',
-    zh: '中文',
-    en: '英文',
-    jp: '日语',
-    kor: '韩语',
-    fra: '法语'
-};
-var from = 'zh';
-var to = 'en';
-var query = '中文';
-var str1 = appid + query + salt +key;
-var sign = MD5(str1);
-console.log(sign);
-    // $.ajax({
-    //         url: 'https://api.fanyi.baidu.com/api/trans/vip/translate',
-    //         type: 'get',
-    //         dataType: 'jsonp',
-    //         data: {
-    //             q: query,
-    //             appid: appid,
-    //             salt: salt,
-    //             from: from,
-    //             to: to,
-    //             sign: sign
-    //         },
-    //         success: function (data) {
-    //             console.log(data);
-    //         }
-    //     });
-
-var http = require('http');
-var url = require('url');
-var options = {
-    protocol: 'https:',
-    hostname: 'api.fanyi.baidu.com',
-    port: 443,
-    path: '/api/trans/vip/translate?q=' + query + '&appid=' + appid +'&salt=' + salt + '&from=' + from + '&to=' + to + '&sign=' + sign,
-    method: 'GET'
-};
-// console.log(url.format(options));
-// var url = 
-http.get('http://api.fanyi.baidu.com/api/trans/vip/translate?q=' + query + '&appid=' + appid +'&salt=' + salt + '&from=' + from + '&to=' + to + '&sign=' + sign,(res) => {
-    // console.log(res);
-    res.on('data',res => {
-        console.log(res.toString());
-    })
-})
-
-
-
 var readline = require('readline');
 
-// var rl = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout
-// })
+var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+})
 
 // rl.question('Please input a word: ', function(answer){
-//     console.log('You have entered [%s]', answer.toUpperCase());
-
+//     console.log('You have entered %s', answer.toUpperCase());
 //     rl.close();
 // })
+
+
+/**
+ * 栗子：文件逐行读取，日志分析
+ * 
+*/
+
+const fs = require('fs');
+const rl1 = readline.createInterface({
+    input: fs.createReadStream('./access.log')
+});
+rl1.on('line', line => {
+    console.log('line');
+    const arr = line.split(' ');
+    console.log('访问时间：%s %s，访问地址：%s', arr[0], arr[1], arr[13]);
+})

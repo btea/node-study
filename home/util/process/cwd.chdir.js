@@ -6,7 +6,7 @@
 
 // chdir切换工作路径，切换的是什么工作路径？传入的directory具体指什么，要以什么格式传入?
 
-console.log('Stasrting directory:' + process.cwd());
+console.log('Starting directory:' + process.cwd());
 try{
     process.chdir('/child_process'); 
     console.log('New Directory：' + process.cwd());
