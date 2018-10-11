@@ -27,7 +27,7 @@ Press ^C at any time to quit.
 console.log(preHint);
 
 // 问题
-let questions = ['name', 'version', 'description', 'entry point', 'test command', 'git repository', 'keywords', 'author', 'license'];
+let questions = ['name', 'version', 'description', 'entry point', 'test command', 'author', 'license', 'git repository', 'keywords'];
 
 // 默认答案
 let basepath = path.resolve(__dirname);
@@ -61,7 +61,7 @@ function getEntry(){
     console.log(entry);
 }
 
-let defaultAnswers = [defaultName, version, description, entry, command, repository, key, author, license];
+let defaultAnswers = [defaultName, version, description, entry, command, author, license, repository, key];
 
 // 用户答案
 let answers = [];
@@ -69,19 +69,15 @@ let index = 0;
 
 function createPackageJson(){
     let map = {};
-
     questions.forEach(function(qu, index){
+        qu === 'entry point' && (qu = 'main');
+        qu === 'test command' && (qu = 'scripts');
+        qu === 'git repository' && (qu = 'repository');
         map[qu] = answers[index];
     });
-    map.main = map['entry point'];
-    map.scripts = map['test command'];
-    map.repository = map['git repository'];
-    map.keywords.length || delete map.keywords;
-    delete map['entry point'];
-    delete map['test command'];
-    delete map['git repository'];
+    // process.exit();
     map.repository.url || delete map.repository;
-    
+    map.keywords.length || delete map.keywords;
     console.log('About to write to ' + basepath + '\\package.json：\n');
     console.log(map);
     console.log('\n\n');
