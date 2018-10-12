@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>small socket</title>
+    <link rel="icon" href="https://socket.io/images/favicon.png">
+</head>
+<body>
+    <button class="ques">question</button>
+    <div class="ans"></div>
+
+    <!-- <script src="./eventEmitter.js"></script> -->
+    <script src="/home/util/events/small.socket/eventEmitter.js"></script>
+    <script>
+        var ques = document.getElementsByClassName('ques')[0];
+        var ans = document.getElementsByClassName('ans')[0];
+        var socket = new EventEmitter();
+        ques.addEventListener('click', function(){
+            socket.emit('question',ques.innerText);
+            socket.on('answer', function(data){
+                ans.innerText = data;
+            })
+        })
+    </script>
+</body>
+</html>

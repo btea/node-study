@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>socket.io</title>
+    <link rel="icon" href="https://socket.io/images/favicon.png">
+</head>
+<body>
+    <button class="ask">今天的天气是？</button>
+    <div class="answer"></div>
+    
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io('http://localhost');
+        var ask = document.getElementsByClassName('ask')[0];
+        var answer = document.getElementsByClassName('answer')[0];
+        // socket.on('news', function(data){
+        //     console.log(data);
+        //     socket.emit('my other event', {my: 'data'});
+        // })
+        ask.addEventListener('click', function(){
+            socket.emit('weather',{'ask': ask.innerText})
+        });
+        socket.on('weather answer', function(data){
+            answer.innerText = data;
+        })
+    </script>
+</body>
+</html>

@@ -14,7 +14,7 @@ try{
 }
 console.log(data);
  // 设置状态码、状态描述信息、响应主体
- var server = http.createServer(function(req,res){
+var server = http.createServer(function(req,res){
      res.writeHead(200, 'ok', {
          'Content-Type': 'text/html;charset=utf-8'
      });
@@ -31,8 +31,8 @@ console.log(data);
     //     res.write(file,'binary');
     //     res.end(file);
     // })
- });
- server.listen(3000)
+});
+server.listen(80);
 
 
 
@@ -101,7 +101,7 @@ console.log(data);
     Returns true if the entire data was flushed successfully to the kernel buffer. Returns false if all or part of the data was queued in user memory. 'drain' will be emitted when the buffer is free again.
 
     response.end([data][, encoding][, callback])
-    掌握了 res.write() 的话，res.end() 就很简单了。res.end() 的用处是告诉nodejs，header、body都给你了，这次响应就到这里吧。
+    掌握了 res.write() 的话，res.end() 就很简单了。res.end() 的用处是告诉nodejs，header、body都给你了，这次响应就到此为止。
 
     有点像个语法糖，可以看成下面两个调用的组合。至于callback，当响应传递结束后触发。
     res.write(data, encoding);
