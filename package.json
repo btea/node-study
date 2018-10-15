@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/btea/node#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "colors": "^1.3.2",
     "inquirer": "^6.2.0",
     "jquery": "^3.3.1",
