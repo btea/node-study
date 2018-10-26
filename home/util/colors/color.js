@@ -81,3 +81,6 @@ console.log('abc'.white());
 // console.log('\x1B[36m%s\x27[0m', 'info');
 
 // console.log(process.stdout.write('\x1B[36minfo\x1B[0m'))
+
+const sym = require('./symbol');
+console.log(sym.heart.red());
