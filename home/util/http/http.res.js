@@ -8,11 +8,13 @@ var http = require('http');
 var fs = require('fs');
 
 try{
-    var data = fs.readFileSync('./http.html');
+    // var data = fs.readFileSync('./http.html');
+    var data = fs.readFileSync('../fs/name.txt');
 }catch(err){
     console.log(err);
 }
-console.log(data);
+// console.log(data);
+// console.log(dataDeal(data));
  // 设置状态码、状态描述信息、响应主体
 var server = http.createServer(function(req,res){
      res.writeHead(200, 'ok', {
@@ -20,7 +22,8 @@ var server = http.createServer(function(req,res){
      });
     //  res.setHeader('Content-Type','text/html;charset=utf-8');
     //  res.write('<p style="color:#6cf;">一个段落 this is a word</p>','utf8');
-    res.write(data);
+    // res.write(data);
+    res.write(dataDeal(data));
     res.end('hello');
     // fs.readFile('../vue.png','binary', function(err, file){
     //     if(err){
@@ -34,6 +37,14 @@ var server = http.createServer(function(req,res){
 });
 server.listen(80);
 
+function dataDeal(data){
+    var arr = data.toString().split(/\r\n/);
+    arr.length = 100;
+    arr.map((item,i) => {
+        arr[i] = '<span style="margin: 0 5px">' + item  + '</span>';
+    })
+    return arr.join('');
+}
 
 
  /**
