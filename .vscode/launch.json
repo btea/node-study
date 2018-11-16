@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "启动程序",
-            "program": "${workspaceFolder}\\home\\util\\events\\small.socket\\socket.js"
+            "program": "${workspaceFolder}\\koa\\fetch.js"
         }
     ]
 }
