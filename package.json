@@ -23,12 +23,15 @@
     "iconv-lite": "^0.4.24",
     "inquirer": "^6.2.0",
     "jquery": "^3.3.1",
+    "koa-bodyparser": "^3.2.0",
+    "koa-router": "^7.4.0",
     "md5": "^2.2.1",
     "socket.io": "^2.1.1",
     "superagent": "^4.0.0-beta.5"
   },
   "devDependencies": {
     "babel-register": "^6.26.0",
+    "koa": "^2.6.2",
     "request": "^2.88.0"
   }
 }
