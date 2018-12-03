@@ -20,10 +20,10 @@ async function context(ctx, fullStaticPath) {
 
     // 判断请求路径是否为存在目录或者文件
     let exist = fs.existsSync(reqPath);
-
+    console.log(reqPath);
+    console.log(exist);
     // 返回请求内容，默认为空
     let content = '';
-
     if(!exist){
         // 如果请求路径不存在，返回404
         content = '404 Not Found!  o(╯□╰)o！'

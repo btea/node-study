@@ -6,7 +6,7 @@ const fs = require('fs');
  * @return {string|binary}
 */
 function file(filePath){
-    let content = fs.readdirSync(filePath, 'binary');
+    let content = fs.readFileSync(filePath, 'binary');
     return content;
 }
 module.exports = file;

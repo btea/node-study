@@ -15,9 +15,11 @@ const walk = require('./walk');
 function dir(url, reqPath){
     // 遍历读取当前目录下的文件、子目录
     let contentList = walk(reqPath);
+    console.log(contentList);
     let html = `<ul>`;
+    // contentList.entries 得到一个迭代器（Iterator）
     for(let [index,item] of contentList.entries()){
-        html += `${html}<li><a href="${url === '/' ? '' : url}/${item}">${item}</a>`
+        html = `${html}<li><a href="${url === '/' ? '' : url}/${item}">${item}</a>`
     }
     html = `${html}</ul>`
     return html;

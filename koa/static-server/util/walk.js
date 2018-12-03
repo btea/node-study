@@ -13,7 +13,6 @@ function walk(reqPath){
         let item = files[i];
         let itemArr = item.split('\.');
         let itemMime = (itemArr.length > 1) ? itemArr[itemArr.length - 1] : 'undefined';
-        
         if(typeof mimes[itemMime] === 'undefined'){
             dirList.push(files[i]);
         }else{

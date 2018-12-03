@@ -21,10 +21,10 @@ app.use(async (ctx) => {
 
     // 获取静态资源内容，有可能是文件内容、目录或者404
     let _content = await content(ctx, fullStaticPath);
+    // console.log(_content);
 
     // 解析请求内容的类型
     let _mime = parseMime(ctx.url);
-
     // 如果有对应的文件类型，就配置上下文的类型
     if(_mime){
         ctx.type = _mime;

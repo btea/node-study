@@ -1,6 +1,3 @@
-
-
-
 function parsePostData(ctx){
     return new Promise((resolve, reject) => {
         try{
@@ -10,6 +7,7 @@ function parsePostData(ctx){
             })
             ctx.req.addListener('end', function(){
                 let parseData = parseQueryStr(postdata);
+                console.log(postdata);
                 resolve(parseData);
             })
         }catch(err){
@@ -51,6 +49,7 @@ app.use(async (ctx) => {
     }else if(ctx.url === '/' && ctx.method === 'POST'){
         // 当POST请求的时候，解析POST表单里的数据，并显示出来
         let postData = await parsePostData(ctx);
+        console.log(postData);
         ctx.body = postData;
     }else{
         // 其他请求显示404
