@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/btea/node#readme",
   "dependencies": {
+    "async": "^2.6.1",
     "busboy": "^0.2.14",
     "chalk": "^2.4.1",
+    "cheerio": "^1.0.0-rc.2",
     "colors": "^1.3.2",
     "fast-json-stringify": "^1.9.2",
     "iconv-lite": "^0.4.24",
