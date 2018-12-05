@@ -43,7 +43,6 @@ function format(src){
 
 
 function startLoad(pro, suffix, src){
-
     pro.get(src, function(res){
         let imgData = '', isExist, dir = './img', name;
         res.setEncoding('binary'); // 需设置response的编码为binary
@@ -81,5 +80,4 @@ function dataWrite(name, data){
 }
 
 // toSave(src);
-
 module.exports = toSave;

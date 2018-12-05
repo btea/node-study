@@ -8,7 +8,7 @@ let timer = setInterval(function(){
     // //移动光标到行首
     readline.cursorTo(process.stdout, 1,1);
     
-    process.stdout.write('\x1b[42;34m' + str + init + '%' + str + '\x1b[0m');
+    process.stdout.write('\x1b[46;34m' + str + init + '%' + str + '\x1b[0m');
     init++;
     if(init > 100){
         clearTimeout(timer);
