@@ -28,7 +28,7 @@ function format(src){
      * 获取图片格式
     */
     let reg = /:\/{2}/,arr = [],protocol,suffix;
-    let imgFormat = /jpg|jpeg|png|gif|webp/i;
+    let imgFormat = /jpg|jpeg|png|gif|webp|mp3|mp4|mkv|hlv/i;
     if(typeof src === 'string'){
         protocol = src.split(reg)[0];
         arr = src.split('.');
@@ -80,4 +80,5 @@ function dataWrite(name, data){
 }
 
 // toSave(src);
+toSave('http://edge.ivideo.sina.com.cn/89314864.hlv?KID=sina,viask&Expires=1544198400&ssig=uLYyR9%2FDzX');
 module.exports = toSave;

@@ -1,5 +1,6 @@
 const https = require('https');
 const http = require('http');
+const cheerio = require('cheerio');
 
 const loadImg = require('./loadImg');
 
@@ -19,6 +20,8 @@ const options = {
     method: 'GET'
 }
 
+ 
+
 // http.createServer(function(request, response){
     let req = http.request(options, function(res){
         let data = '', allImg = [];
@@ -31,12 +34,8 @@ const options = {
             dealImg(data);
             return;
             let d = JSON.parse(data).res.category;
-            console.log(d);
             d.forEach(function(img){
-                allImg.push(img.cover);
-            })
-            allImg.forEach(function(src){
-                loadImg(src);
+                loadImg(img.cover);
             })
             // response.end(data);
         })
