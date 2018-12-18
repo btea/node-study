@@ -1,87 +1,128 @@
 
-const name = encodeURI('最强赘婿');
+const bookname = '史上最强赘婿';
 
 const http = require('http');
 const https = require('https');
 
-
-
-
 // http://api.zhuishushenqi.com/
-const options = {
-    hostname: 'api.zhuishushenqi.com',
-    port: 80,
-    path: '/book/fuzzy-search?query=' + name +'&start=0&limit=10',
-    method: 'GET',
-};
-
-let req = http.request(options, function(res){
-    res.setEncoding('utf8');
-    let data = '';
-    res.on('data', function(chunk){
-        data += chunk;
-    });
-    res.on('end', function(){
-        let list = JSON.parse(data).books;
-        let book = list[2];
-        // getDetail(book._id);
-        getChapters(book._id);
-    })
-});
-req.on('error',function(e){
-    console.log('problem with request:' + e.message);
-})
-req.end();
-
 // let detail = 'http://api.zhuishushenqi.com/toc/5b99d68f37feecdd4b8c7653?view=chapters';
 // let source = 'api.zhuishushenqi.com/toc?view=summary&book=57206c3539a913ad65d35c7b';
 
 
 // https://github.com/zimplexing/vue-nReader/blob/master/doc/zhuishushenqi.md(url地址)
 // 根据book id获取章节
-function getChapters(id){
-    // let url = 'http://api.zhuishushenqi.com/mix-atoc/5b99d68f37feecdd4b8c7653?view=chapters';
-    let chapter = http.request({
-        hostname: 'api.zhuishushenqi.com',
-        port: 80,
-        path: '/mix-atoc/' + id + '?view=chapters',
-        method: 'GET'
-    }, function(res){
-        let data = '';
-        res.setEncoding('utf8');
-        res.on('data', function(chunk){
-            data += chunk;
+
+
+let chapterNum = 180; // 章节数
+
+let book = {
+    search: function(word){
+        let name = encodeURIComponent(word),_self = this;
+        let req = http.request({
+            hostname: 'api.zhuishushenqi.com',
+            port: 80,
+            path: '/book/fuzzy-search?query=' + name +'&start=0&limit=10',
+            method: 'GET',
+        }, function(res){
+            res.setEncoding('utf8');
+            let data = '';
+            res.on('data', function(chunk){
+                data += chunk;
+            });
+            res.on('end', function(){
+                let list = JSON.parse(data).books;
+                if(!list.length){
+                    console.log('cannot found this information.');
+                }else{
+                    let target,reg = new RegExp('^' + bookname + '$');
+                    list.forEach(function(l){
+                        if(reg.test(l.title)){
+                            target = l;
+                        }
+                    });
+                    if(target){
+                        _self.allChapters(target._id);
+                    }else{
+                        console.log('cannot not found this book.')
+                    }
+                }
+            })
         });
-        res.on('end', function(){
-            let arr = JSON.parse(data).mixToc.chapters;
-            content(arr[0].link);
-            // console.log(arr[0])
+        req.on('error',function(e){
+            console.log('problem with request:' + e.message);
         })
-    });
-    chapter.on('error', function(e){
-        console.log('error!', e.message);
-    });
-    chapter.end();
+        req.end();
+    },
+
+    allChapters: function(id){
+        /**
+         * @param id book_id
+        */
+        // let url = 'http://api.zhuishushenqi.com/mix-atoc/5b99d68f37feecdd4b8c7653?view=chapters';
+        let _self = this;
+        let chapter = http.request({
+            hostname: 'api.zhuishushenqi.com',
+            port: 80,
+            path: '/mix-atoc/' + id + '?view=chapters',
+            method: 'GET'
+        }, function(res){
+            let data = '';
+            res.setEncoding('utf8');
+            res.on('data', function(chunk){
+                data += chunk;
+            });
+            res.on('end', function(){
+                let arr = JSON.parse(data).mixToc.chapters;
+                _self.chapterContent(arr[chapterNum].link);
+                // console.log(arr[0])
+            })
+        });
+        chapter.on('error', function(e){
+            console.log('error!', e.message);
+        });
+        chapter.end();
+    },
+    chapterContent: function(link){
+        // let url = 'http://chapterup.zhuishushenqi.com/chapter/http://vip.zhuishushenqi.com/chapter/5817f1161bb2ca566b0a5973?cv=1481275033588'
+        // let url1 = 'chapter2.zhuishushenqi.com/chapter/http%3a%2f%2fbook.my716.com%2fgetBooks.aspx%3fmethod%3dcontent%26bookId%3d1127281%26chapterFile%3dU_1212539_201701211420571844_4093_2.txt?k=2124b73d7e2e1945&t=1468223717'
+        link = encodeURIComponent(link);
+        let data = '', _self = this;
+        let cont = http.request({
+            hostname: 'chapter2.zhuishushenqi.com',
+            port: 80,
+            path: '/chapter/' + link + '?k=2124b73d7e2e1945&t=1468223717',
+            method: 'GET'  
+        }, function(res){
+            res.setEncoding('utf8');
+            res.on('data', function(chunk){
+                // console.log(chunk);
+                data += chunk;
+            });
+            res.on('end',function(){
+                _self.sendContent(JSON.parse(data).chapter.body);
+            })
+        });
+        cont.on('error', function(e){
+            console.log('error!', e.message);
+        });
+        cont.end();
+    },
+    sendContent: function(text){
+        console.log(text);
+        return;
+        let res = this.response;
+        res.writeHead(200,'ok',{
+            'Content-Type': 'text/plain;charset=utf-8'
+        });
+        
+        res.end(text);
+    }
 }
 
-// 根据章节链接获取内容
-function content(link){
-    // let url = 'http://chapterup.zhuishushenqi.com/chapter/http://vip.zhuishushenqi.com/chapter/5817f1161bb2ca566b0a5973?cv=1481275033588'
-    // let url1 = 'chapter2.zhuishushenqi.com/chapter/http%3a%2f%2fbook.my716.com%2fgetBooks.aspx%3fmethod%3dcontent%26bookId%3d1127281%26chapterFile%3dU_1212539_201701211420571844_4093_2.txt?k=2124b73d7e2e1945&t=1468223717'
-    link = encodeURIComponent(link);
-    let cont = http.request({
-        hostname: 'chapter2.zhuishushenqi.com',
-        port: 80,
-        path: '/chapter/' + link + '?k=2124b73d7e2e1945&t=1468223717',
-        method: 'GET'  
-    }, function(res){
-        res.setEncoding('utf8');
-        res.on('data', function(chunk){
-            // console.log(chunk);
-        })
-    });
-    cont.on('error', function(e){
-        console.log('error!', e.message);
-    });
-    cont.end();
-}
+
+// http.createServer(function(request, response){
+//     book.response = response;
+//     book.search(bookname);  
+// }).listen(2333);
+
+
