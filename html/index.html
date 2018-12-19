@@ -4,16 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="https://cn.vuejs.org/images/logo.png" type="image/png">
     <title>home</title>
+    <style>
+        header{
+            text-align: center;
+        }
+        .search-list{
+            display: inline-block;
+            position: relative;
+        }
+        .search-list .list{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            left: 0;
+            top: 30px;
+            width: 100%;
+        }
+        .search-list .list .item{
+            color: #ffffff;
+            font-size: 12px;
+            height: 30px;
+            cursor: pointer;
+        }
+        .search{
+            width: 200px;
+            height: 30px;
+            border: 1px solid #6cf;
+            border-radius: 15px;
+            outline: none;
+            text-align: center;
+            color: #ffffff;
+        }
+        .search:focus-within{
+            border-color: aqua;
+        }
+        .container{
+            margin-top: 100px;
+        }
+        .container .link-lists{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0;
+        }
+        .container .link-lists .chapter-name{
+            display: inline-block;
+            width: 33.33%;
+            font-size: 14px;
+            font-family: '楷体';
+            text-align: left;
+            color: #ffffff;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <button onclick="test()">按钮</button>
+    <header>
+        <div class="search-list">
+            <input type="text" class="search">
+            <ul class="list"></ul>
+        </div>
+    </header>
+    <div class="container">
+        <ul class="link-lists">
 
+        </ul>
+    </div>
     <script>
-        function test(){
-            console.log('按钮测试');
+        document.onkeydown = function(e){
+            if(e.keyCode === 13){
+                var str =  document.getElementsByClassName('search')[0].value.trim();
+                if(str){
+                    book.search(str);
+                }else{
+                    alert('书名不能为空');
+                }
+            }
+        }
+        var book = {
+            search: function(word){
+                this.request('/book?name=' + word, 'get');
+            },
+            // search according to word
+            request: function(url, type){
+                var xhr = new XMLHttpRequest(),_self = this;
+                xhr.open(type, url);
+                xhr.send();
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4 && xhr.status === 200){
+                        book.bookData = JSON.parse(xhr.responseText).books;
+                        _self.addList();        
+                    }
+                }
+            },
+            addList: function(){
+                var elList = document.getElementsByClassName('list')[0],
+                    str = '',
+                    data = this.bookData
+                ;
+                if(!data.length){
+                    str = '<li>cannot found this book.</li>'
+                }else{
+                    data.forEach(function(d){
+                        str += '<li class="item" id="' + d._id + '">' + d.title + '<span class="author">' + d.author + '</span></li>';
+                    })   
+                }
+                elList.innerHTML = str;
+                this.addEvent();
+            },
+            addEvent: function(){
+                if(!this.chapterEle){
+                    this.chapterEle = document.getElementsByClassName('link-lists')[0];
+                }
+                var target = document.getElementsByClassName('list')[0].children, str = '',_self = this;
+                for(var i = 0; i < target.length; i++){
+                    target[i].addEventListener('click', function(e){
+                        var id = e.target.getAttribute('id');
+                        if(!id){
+                            alert('please try again!');
+                            return;
+                        }
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('get', '/allChapters?id=' + id);
+                        xhr.send();
+                        xhr.onreadystatechange = function(){
+                            if(xhr.readyState === 4 && xhr.status === 200){
+                                _self.chapters = JSON.parse(xhr.responseText).mixToc.chapters;
+                                _self.chapters.forEach(function(c){
+                                    str += '<li class="chapter-name" data-link="' + c.link + '">' + c.title + '</li>';
+                                })
+                                _self.chapterEle.innerHTML = str;
+                                _self.listenChapter();
+                            }
+                        }
+                    })
+                }
+            },
+            listenChapter: function(){
+                var links = document.getElementsByClassName('chapter-name'),_self = this;
+                for(var i = 0; i < links.length; i++){
+                    links[i].addEventListener('click', function(e){
+                        var link = e.target.getAttribute('data-link');
+                        _self.obtainText(link);
+                    })
+                }
+            },
+            obtainText: function(link){
+                if(!link){
+                    alert('please get correct link.');
+                    return;
+                }
+                var xhr = new XMLHttpRequest(),_self = this;
+                xhr.open('get','/text?link=' + link);
+                xhr.send();
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4 && xhr.status === 200){
+                        _self.chapter = JSON.parse(xhr.responseText).chapter.body;
+                        console.log(_self.chapter);
+                    }
+                }
+            }
         }
     </script>
-    <script src="./js/a.js" charset="UTF-8"></script>
 </body>
 </html>

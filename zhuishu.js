@@ -3,6 +3,7 @@ const bookname = '史上最强赘婿';
 
 const http = require('http');
 const https = require('https');
+const fs = require('fs');
 
 // http://api.zhuishushenqi.com/
 // let detail = 'http://api.zhuishushenqi.com/toc/5b99d68f37feecdd4b8c7653?view=chapters';
@@ -30,22 +31,10 @@ let book = {
                 data += chunk;
             });
             res.on('end', function(){
-                let list = JSON.parse(data).books;
-                if(!list.length){
-                    console.log('cannot found this information.');
-                }else{
-                    let target,reg = new RegExp('^' + bookname + '$');
-                    list.forEach(function(l){
-                        if(reg.test(l.title)){
-                            target = l;
-                        }
-                    });
-                    if(target){
-                        _self.allChapters(target._id);
-                    }else{
-                        console.log('cannot not found this book.')
-                    }
-                }
+                _self.response.writeHead(200,'ok',{
+                    'Content-Type': 'text/plain;charset=utf-8'
+                });
+                _self.response.end(data);
             })
         });
         req.on('error',function(e){
@@ -72,9 +61,10 @@ let book = {
                 data += chunk;
             });
             res.on('end', function(){
-                let arr = JSON.parse(data).mixToc.chapters;
-                _self.chapterContent(arr[chapterNum].link);
-                // console.log(arr[0])
+                _self.response.writeHead(200,'ok',{
+                    'Content-Type': 'text/plain;charset=utf-8'
+                });
+                _self.response.end(data);
             })
         });
         chapter.on('error', function(e){
@@ -99,30 +89,49 @@ let book = {
                 data += chunk;
             });
             res.on('end',function(){
-                _self.sendContent(JSON.parse(data).chapter.body);
+                _self.response.writeHead(200,'ok',{
+                    'Context-Type': 'text/plain;chaset=utf-8'
+                });
+                _self.response.end(data);
             })
         });
         cont.on('error', function(e){
             console.log('error!', e.message);
         });
         cont.end();
-    },
-    sendContent: function(text){
-        console.log(text);
-        return;
-        let res = this.response;
-        res.writeHead(200,'ok',{
-            'Content-Type': 'text/plain;charset=utf-8'
-        });
-        
-        res.end(text);
     }
 }
 
 
-// http.createServer(function(request, response){
-//     book.response = response;
-//     book.search(bookname);  
-// }).listen(2333);
+http.createServer(function(request, response){
+    let url = request.url;
+    if(url === '/'){
+        fs.readFile('./html/index.html', 'utf8', function(e, data){
+            if(e){
+                console.log(e);
+            }else{
+                response.end(data);
+            }
+        })
+    }
+    if(/^\/book/.test(url)){
+        let word = url.split('?')[1].split('=')[1];
+        book.response = response;
+        book.search(word);
+    }
+    if(/^\/allChapters/.test(url)){
+        let id = url.split('?')[1].split('=')[1];
+        book.response = response;
+        book.allChapters(id);
+    }
+    if(/^\/text/.test(url)){
+        let link = url.split('link=')[1];
+        book.response = response;
+        book.chapterContent(link);
+    }
+    if(/^\/favicon/.test(url)){
+        response.end('');
+    }
+}).listen(2333);
 
 
