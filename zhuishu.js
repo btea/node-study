@@ -1,5 +1,4 @@
 
-const bookname = '史上最强赘婿';
 
 const http = require('http');
 const https = require('https');
@@ -13,8 +12,6 @@ const fs = require('fs');
 // https://github.com/zimplexing/vue-nReader/blob/master/doc/zhuishushenqi.md(url地址)
 // 根据book id获取章节
 
-
-let chapterNum = 180; // 章节数
 
 let book = {
     search: function(word){

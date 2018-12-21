@@ -24,6 +24,6 @@ io.on('connection',function(socket){
     // })
     socket.on('weather',function(data){
         console.log(data);
-        socket.emit('weather answer', data.ask + '：天空高远，大风吟唱~~');
+        socket.emit('weather answer', data.ask + '：晴转多云');
     })
 })
