@@ -7,10 +7,15 @@
     <link rel="icon" href="https://cn.vuejs.org/images/logo.png" type="image/png">
     <title>home</title>
     <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+        }
         header{
             text-align: center;
         }
         .search-list{
+            margin-top: 20px;
             display: inline-block;
             position: relative;
         }
@@ -44,22 +49,54 @@
         }
         .container{
             margin-top: 100px;
+            position: relative;
+            width: 100%;
         }
         .container .link-lists{
             margin: 0;
             padding: 0;
             list-style: none;
             font-size: 0;
+            width: 200px;
+            position: fixed;
+            top: 100px;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .container .link-lists::-webkit-scrollbar{
+            display: none;
+        }
+        .container .title{
+            position: fixed;
+            left: 0;
+            top: 70px;
+            text-align: center;
+            font-family: '楷体';
+            width: 200px;
         }
         .container .link-lists .chapter-name{
             display: inline-block;
-            width: 33.33%;
+            width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             font-size: 14px;
             font-family: '楷体';
             text-align: left;
             /* color: #ffffff; */
             margin: 5px 0;
             cursor: pointer;
+        }
+        .container .chapter-text{
+            position: absolute;
+            left: 200px;
+            right: 0;
+            top: 0;
+            padding: 20px;
+        }
+        .container .chapter-text p{
+            text-indent: 2em;
         }
     </style>
 </head>
@@ -71,9 +108,9 @@
         </div>
     </header>
     <div class="container">
-        <ul class="link-lists">
-
-        </ul>
+        <div class="title">章节目录</div>
+        <ul class="link-lists"></ul>
+        <div class="chapter-text"></div>
     </div>
     <script>
         document.onkeydown = function(e){
@@ -87,6 +124,8 @@
             }
         }
         var book = {
+            fontFamily: ['楷体','宋体','Franklin Gothic Medium', 'Arial Narrow', 'Arial', 'sans-serif','微软雅黑'],
+            backgroundStyle: [],
             search: function(word){
                 this.request('/book?name=' + word, 'get');
             },
@@ -140,7 +179,7 @@
                             if(xhr.readyState === 4 && xhr.status === 200){
                                 _self.chapters = JSON.parse(xhr.responseText).mixToc.chapters;
                                 _self.chapters.forEach(function(c){
-                                    str += '<li class="chapter-name" data-link="' + c.link + '">' + c.title + '</li>';
+                                    str += '<li class="chapter-name" data-link="' + c.link + '" title="' + c.title + '">' + c.title + '</li>';
                                 })
                                 _self.chapterEle.innerHTML = str;
                                 _self.listenChapter();
@@ -164,15 +203,32 @@
                     alert('please get correct link.');
                     return;
                 }
+                if(!this.textContainer){
+                    this.textContainer = document.getElementsByClassName('chapter-text')[0];
+                }
                 var xhr = new XMLHttpRequest(),_self = this;
                 xhr.open('get','/text?link=' + link);
                 xhr.send();
                 xhr.onreadystatechange = function(){
                     if(xhr.readyState === 4 && xhr.status === 200){
                         _self.chapter = JSON.parse(xhr.responseText).chapter.body;
-                        console.log(_self.chapter);
+                        _self.showText();
                     }
                 }
+            },
+            showText: function(){
+                var arr = this.chapter.split(/\r|\n/g),
+                    frag = document.createDocumentFragment()
+                ;
+                arr.forEach(function(c,i){
+                    var p = document.createElement('p');
+                    p.classList = 'chapter-' + i;
+                    p.innerText = c;
+                    frag.appendChild(p);
+                })
+                this.textContainer.appendChild(frag);
+                // this.textContainer.innerText = this.chapter;
+                // console.log(arr);
             }
         }
     </script>
