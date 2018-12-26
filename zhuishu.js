@@ -96,6 +96,39 @@ let book = {
             console.log('error!', e.message);
         });
         cont.end();
+    },
+    // 看书背景
+    types: ['recommend','hot','new'],
+
+    biliPicturesApi: function(type, num, size){
+        // https://api.vc.bilibili.com/link_draw/v2/Doc/index?type=hot&page_num=0&page_size=45
+        let data = '', _self = this;
+        num = num || 0;
+        size = size || 45;
+        let items = https.request({
+            hostname: 'api.vc.bilibili.com',
+            port: 443,
+            path: '/link_draw/v2/Doc/index?type=' + type + '&page_num=' + num + '&=page_size=' + size,
+            method: 'GET',
+            // headers: {
+            //     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"
+            // }
+        },function(res){
+            res.setEncoding('utf8');
+            res.on('data', function(chunk){
+                data += chunk;
+            });
+            res.on('end', function(){
+                _self.response.writeHead(200,'ok',{
+                    'Context-Type': 'text/plain;chaset=utf-8'
+                });
+                _self.response.end(data);
+            })
+        });
+        items.on('error', function(e){
+            console.log('error!', e.message);
+        });
+        items.end();
     }
 }
 
@@ -125,6 +158,11 @@ http.createServer(function(request, response){
         let link = url.split('link=')[1];
         book.response = response;
         book.chapterContent(link);
+    }
+    if(/^\/bili/.test(url)){
+        let type = book.types[Math.floor(Math.random() * 3)];
+        book.response = response;
+        book.biliPicturesApi(type);
     }
     if(/^\/favicon/.test(url)){
         response.end('');

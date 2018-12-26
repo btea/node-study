@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="referrer" content="never">
     <link rel="icon" href="https://cn.vuejs.org/images/logo.png" type="image/png">
     <title>home</title>
     <style>
@@ -88,15 +89,23 @@
             margin: 5px 0;
             cursor: pointer;
         }
-        .container .chapter-text{
+        .container .chapter{
             position: absolute;
             left: 200px;
             right: 0;
             top: 0;
             padding: 20px;
         }
-        .container .chapter-text p{
+        .container .chapter .text-word{
+            width: 1000px;
+            margin: 0 auto;
+            background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat;
+            background-size: 100%;
+            background-attachment: fixed;
+        }
+        .container .chapter .text-word p{
             text-indent: 2em;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -110,7 +119,9 @@
     <div class="container">
         <div class="title">章节目录</div>
         <ul class="link-lists"></ul>
-        <div class="chapter-text"></div>
+        <div class="chapter">
+            <div class="text-word"></div>
+        </div>
     </div>
     <script>
         document.onkeydown = function(e){
@@ -204,7 +215,7 @@
                     return;
                 }
                 if(!this.textContainer){
-                    this.textContainer = document.getElementsByClassName('chapter-text')[0];
+                    this.textContainer = document.getElementsByClassName('text-word')[0];
                 }
                 var xhr = new XMLHttpRequest(),_self = this;
                 xhr.open('get','/text?link=' + link);
@@ -227,8 +238,20 @@
                     frag.appendChild(p);
                 })
                 this.textContainer.appendChild(frag);
+                this.bilibiliPic();
                 // this.textContainer.innerText = this.chapter;
                 // console.log(arr);
+            },
+            bilibiliPic: function(){
+                var xhr = new XMLHttpRequest(),_self = this;
+                xhr.open('get','/bili');
+                xhr.send();
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4 && xhr.status === 200){
+                        _self.items = JSON.parse(xhr.responseText);
+                        console.log(_self.items);
+                    }
+                }
             }
         }
     </script>
