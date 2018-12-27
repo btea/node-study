@@ -107,6 +107,13 @@
             text-indent: 2em;
             font-size: 12px;
         }
+        .container .chapter .button{
+            font-size: 14px;
+            padding: 5px 10px;
+            border: 1px solid aqua;
+            cursor: pointer;
+            display: inline;
+        }
     </style>
 </head>
 <body>
@@ -121,6 +128,8 @@
         <ul class="link-lists"></ul>
         <div class="chapter">
             <div class="text-word"></div>
+            <div class="prev button">上一章</div>
+            <div class="next button">下一章</div>
         </div>
     </div>
     <script>
@@ -192,6 +201,7 @@
                                 _self.chapters.forEach(function(c){
                                     str += '<li class="chapter-name" data-link="' + c.link + '" title="' + c.title + '">' + c.title + '</li>';
                                 })
+                                _self.chaptersNum = _self.chapters.length;
                                 _self.chapterEle.innerHTML = str;
                                 _self.listenChapter();
                                 _self.bookList.style.display = 'none';
@@ -201,10 +211,17 @@
                 }
             },
             listenChapter: function(){
-                var links = document.getElementsByClassName('chapter-name'),_self = this;
+                var links = document.getElementsByClassName('chapter-name'),
+                    _self = this,
+                    links = [].slice.call(links)
+                ;
                 for(var i = 0; i < links.length; i++){
                     links[i].addEventListener('click', function(e){
-                        var link = e.target.getAttribute('data-link');
+                        var link = e.target.getAttribute('data-link'),
+                            el = e.target
+                        ;
+                        // 当前选中的章节
+                        _self.selectChapter = links.indexOf(el);
                         _self.obtainText(link);
                     })
                 }
