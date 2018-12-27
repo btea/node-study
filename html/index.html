@@ -12,6 +12,11 @@
             margin: 0;
             padding: 0;
         }
+        body{
+            background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat;
+            background-size: 100%;
+            background-attachment: fixed;
+        }
         header{
             text-align: center;
         }
@@ -99,15 +104,22 @@
         .container .chapter .text-word{
             width: 1000px;
             margin: 0 auto;
-            background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat;
+            /* background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat;
             background-size: 100%;
-            background-attachment: fixed;
+            background-attachment: fixed; */
         }
         .container .chapter .text-word p{
             text-indent: 2em;
             font-size: 12px;
         }
-        .container .chapter .button{
+        .container .chapter .buttons{
+            text-align: center;
+            display: none;
+        }
+        .container .chapter .prev{
+            margin: 0 15px;
+        }
+        .container .chapter .buttons .button{
             font-size: 14px;
             padding: 5px 10px;
             border: 1px solid aqua;
@@ -128,8 +140,10 @@
         <ul class="link-lists"></ul>
         <div class="chapter">
             <div class="text-word"></div>
-            <div class="prev button">上一章</div>
-            <div class="next button">下一章</div>
+            <div class="buttons">
+                <div class="prev button">上一章</div>
+                <div class="next button">下一章</div>
+            </div>
         </div>
     </div>
     <script>
@@ -138,14 +152,57 @@
                 var str =  document.getElementsByClassName('search')[0].value.trim();
                 if(str){
                     book.search(str);
+                    book.initElement();
                 }else{
                     alert('书名不能为空');
                 }
             }
         }
+        
         var book = {
             fontFamily: ['楷体','宋体','Franklin Gothic Medium', 'Arial Narrow', 'Arial', 'sans-serif','微软雅黑'],
             backgroundStyle: [],
+            initElement: function(){
+                this.buttons = this.byClassElement('buttons');
+                this.prev = this.byClassElement('prev');
+                this.next = this.byClassElement('next');
+                this.buttonListener();
+            },
+            // 通过class获取元素
+            byClassElement: function(name){
+                return document.getElementsByClassName(name)[0];
+            },
+            buttonListener: function(){
+                var _self = this;
+                this.prev.addEventListener('click', function(){
+                    _self.switchCHapter('prev');
+                });
+                this.next.addEventListener('click', function(){
+                    _self.switchCHapter('next');
+                })
+            },
+            // 上一章/下一章切换
+            switchCHapter: function(type){
+                var num = this.chaptersNum,
+                    index = this.selectChapter,
+                    links = this.links,
+                    link
+                ;
+                if(type === 'prev'){
+                    if(index === 0){
+                        return ;
+                    }
+                    this.selectChapter--;
+                }
+                if(type === 'next'){
+                    if(num === (index + 1)){
+                        return ;
+                    }
+                    this.selectChapter++;
+                }
+                link = links[this.selectChapter].getAttribute('data-link');
+                this.obtainText(link);
+            },
             search: function(word){
                 this.request('/book?name=' + word, 'get');
             },
@@ -221,6 +278,7 @@
                             el = e.target
                         ;
                         // 当前选中的章节
+                        _self.links = links;
                         _self.selectChapter = links.indexOf(el);
                         _self.obtainText(link);
                     })
@@ -254,10 +312,10 @@
                     p.innerText = c;
                     frag.appendChild(p);
                 })
+                this.textContainer.innerHTML = '';
                 this.textContainer.appendChild(frag);
-                this.bilibiliPic();
-                // this.textContainer.innerText = this.chapter;
-                // console.log(arr);
+                this.buttons.style.display = 'block';
+                // this.bilibiliPic();
             },
             bilibiliPic: function(){
                 var xhr = new XMLHttpRequest(),_self = this;
