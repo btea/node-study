@@ -11,9 +11,10 @@
         html,body{
             margin: 0;
             padding: 0;
+            /* height: 100%; */
         }
         body{
-            background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat;
+            /* background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat; */
             background-size: 100%;
             background-attachment: fixed;
         }
@@ -126,6 +127,43 @@
             cursor: pointer;
             display: inline;
         }
+        /* 滚回至顶部 */
+        .container .text-up{
+            position: fixed;
+            right: 50px;
+            bottom: 100px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(102,204,255,.5);
+            cursor: pointer;
+        }
+        .container .text-up.show{
+            opacity: 1;
+            margin-bottom: 0;
+            transition: all .5s;
+        }
+        .container .text-up.hide{
+            opacity: 0;
+            margin-bottom: -20px;
+            transition: all .5s;
+        }
+        .container .text-up:after{
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 15px;
+            opacity: .5;
+            border-left: 10px solid transparent;
+            border-bottom: 10px solid #6cf;
+            border-right: 10px solid transparent;
+        }
+        .container .text-up:hover{
+            border-color: rgba(102,204,255,.8);
+        }
+        .container .text-up:hover:after{
+            opacity: .8;
+        }
     </style>
 </head>
 <body>
@@ -136,7 +174,7 @@
         </div>
     </header>
     <div class="container">
-        <div class="title">章节目录</div>
+        <div class="title" style="display: none;">章节目录</div>
         <ul class="link-lists"></ul>
         <div class="chapter">
             <div class="text-word"></div>
@@ -145,6 +183,7 @@
                 <div class="next button">下一章</div>
             </div>
         </div>
+        <div class="text-up hide"></div>
     </div>
     <script>
         document.onkeydown = function(e){
@@ -206,7 +245,7 @@
             search: function(word){
                 this.request('/book?name=' + word, 'get');
             },
-            // search according to word
+            // search according to word 
             request: function(url, type){
                 var xhr = new XMLHttpRequest(),_self = this;
                 xhr.open(type, url);
@@ -327,8 +366,47 @@
                         console.log(_self.items);
                     }
                 }
+            },
+            globalEvent: function(){
+                var _self = this;
+                this.toTopIcon = document.getElementsByClassName('text-up')[0];
+                document.addEventListener('scroll', function(){
+                    _self.throttle(_self.isScrollHeight, 300);
+                });
+                this.toTopIcon.addEventListener('click', function(e){
+                    var isHide = !!~this.className.indexOf('hide');
+                    if(isHide){
+                        return;
+                    }
+                    window.scrollTo({
+                        top: 0,
+                        left: 0,
+                        behavior: 'smooth'
+                    })
+                })
+            },
+            isScrollHeight: function(){
+                var _self = book;
+                _self.scrollTop = document.documentElement.scrollTop;
+                if(_self.scrollTop >= 100){
+                    _self.toTopIcon.classList = 'text-up show';
+                }else{
+                    _self.toTopIcon.classList = 'text-up hide';
+                }
+            },
+            throttle: function(func, wait){
+                var _self = this;
+                if(this.time){
+                    return ;
+                }
+                this.time = setTimeout(function(){
+                    func();
+                    _self.time = void 0;
+                }, wait);
             }
         }
+        
+        book.globalEvent();
     </script>
 </body>
 </html>
