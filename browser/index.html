@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>browserify handbook</title>
+</head>
+<body>
+    <!-- <script src="./bundle.js"></script> -->
+    <button class="send">发送消息</button>
+    <script>
+        // var ws = new WebSocket('wss://echo.websocket.org');
+        var ws = new WebSocket('ws://localhost:2333');
+        ws.onopen = function(){
+            ws.send('connection');
+        };
+        ws.onmessage = function(evt){
+            console.log(evt.data);
+            // ws.close();
+        };
+        ws.onclose = function(evt){
+            console.log('WebSocketClosed!');
+        };
+        ws.onerror = function(evt){
+            console.log('WebSocketError!');
+        }
+        var send = document.getElementsByClassName('send')[0];
+        send.addEventListener('click',function(){
+            ws.send(JSON.stringify({
+                type: 'text',
+                word: 'this is a word.'
+            }));
+        })
+    </script>
+</body>
+</html>

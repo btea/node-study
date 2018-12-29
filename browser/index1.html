@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>browser node websocket</title>
+</head>
+<body>
+    <button class="send">客户端2</button>
+    <script>
+        var ws = new WebSocket('ws://localhost:2333');
+        ws.onopen = function(){
+            console.log('客户端2连接成功');
+            send('Client2');
+        };
+        ws.onmessage = function(evt){
+            console.log(evt);
+            console.log('接收到的消息');
+        };
+        ws.onclose = function(){
+            console.log('客户端2关闭连接');
+        };
+        ws.onerror = function(){
+            console.log('当前连接有问题');
+        };
+        function send(message){
+            ws.send(message);
+        };
+        var sendBtn = document.getElementsByClassName('send')[0];
+        sendBtn.addEventListener('click', function(){
+            send('客户端2发送的消息');
+        })
+    </script>
+</body>
+</html>
