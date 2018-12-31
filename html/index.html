@@ -14,7 +14,7 @@
             /* height: 100%; */
         }
         body{
-            /* background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat; */
+            background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat;
             background-size: 100%;
             background-attachment: fixed;
         }
@@ -34,13 +34,16 @@
             left: 0;
             top: 35px;
             width: 100%;
-            background: #ffffff;
+            background-color: rgba(255,255,255,.5);
+            border-radius: 5px;
+            /* background: #ffffff; */
         }
         .search-list .list .item{
             /* color: #ffffff; */
             font-size: 12px;
             height: 30px;
             cursor: pointer;
+            border: 2px solid #ffffff;
         }
         .search{
             width: 200px;
@@ -95,6 +98,9 @@
             margin: 5px 0;
             cursor: pointer;
         }
+        .container .link-lists .chapter-name.active{
+            color: #6cf;
+        }
         .container .chapter{
             position: absolute;
             left: 200px;
@@ -111,7 +117,7 @@
         }
         .container .chapter .text-word p{
             text-indent: 2em;
-            font-size: 12px;
+            font-size: 14px;
         }
         .container .chapter .buttons{
             text-align: center;
@@ -205,6 +211,7 @@
                 this.buttons = this.byClassElement('buttons');
                 this.prev = this.byClassElement('prev');
                 this.next = this.byClassElement('next');
+                this.chaptersTitle = this.byClassElement('title');
                 this.buttonListener();
             },
             // 通过class获取元素
@@ -227,6 +234,7 @@
                     links = this.links,
                     link
                 ;
+                links[index].classList.remove('active');
                 if(type === 'prev'){
                     if(index === 0){
                         return ;
@@ -239,13 +247,16 @@
                     }
                     this.selectChapter++;
                 }
+                links[this.selectChapter].classList.add('active');
                 link = links[this.selectChapter].getAttribute('data-link');
                 this.obtainText(link);
+                this.backToTop();
+                // this.randomBg();
             },
+            // search according to word
             search: function(word){
                 this.request('/book?name=' + word, 'get');
-            },
-            // search according to word 
+            }, 
             request: function(url, type){
                 var xhr = new XMLHttpRequest(),_self = this;
                 xhr.open(type, url);
@@ -257,6 +268,7 @@
                     }
                 }
             },
+            // 根据关键词搜索到的书
             addList: function(){
                 if(!this.bookList){
                     this.bookList = document.getElementsByClassName('list')[0];
@@ -301,6 +313,7 @@
                                 _self.chapterEle.innerHTML = str;
                                 _self.listenChapter();
                                 _self.bookList.style.display = 'none';
+                                _self.chaptersTitle.style.display = 'block';
                             }
                         }
                     })
@@ -309,16 +322,25 @@
             listenChapter: function(){
                 var links = document.getElementsByClassName('chapter-name'),
                     _self = this,
-                    links = [].slice.call(links)
+                    links = [].slice.call(links),
+                    selectIndex // 选中的章节下标
                 ;
+                _self.links = links;
                 for(var i = 0; i < links.length; i++){
                     links[i].addEventListener('click', function(e){
                         var link = e.target.getAttribute('data-link'),
                             el = e.target
                         ;
+                        selectIndex = links.indexOf(el);
                         // 当前选中的章节
-                        _self.links = links;
-                        _self.selectChapter = links.indexOf(el);
+                        if(_self.selectChapter){
+                            if(_self.selectChapter === selectIndex){
+                                return;
+                            }
+                            _self.links[_self.selectChapter].classList.remove('active');    
+                        }
+                        _self.links[selectIndex].classList.add('active');
+                        _self.selectChapter = selectIndex;
                         _self.obtainText(link);
                     })
                 }
@@ -354,7 +376,6 @@
                 this.textContainer.innerHTML = '';
                 this.textContainer.appendChild(frag);
                 this.buttons.style.display = 'block';
-                // this.bilibiliPic();
             },
             bilibiliPic: function(){
                 var xhr = new XMLHttpRequest(),_self = this;
@@ -362,10 +383,17 @@
                 xhr.send();
                 xhr.onreadystatechange = function(){
                     if(xhr.readyState === 4 && xhr.status === 200){
-                        _self.items = JSON.parse(xhr.responseText);
-                        console.log(_self.items);
+                        _self.items = JSON.parse(xhr.responseText).data.items;
+                        _self.randomBg();
                     }
                 }
+            },
+            randomBg: function(){
+                var len = this.items.length,
+                    index = Math.floor(Math.random()*(len + 1))
+                ;
+                document.body.style.backgroundImage = 'url("' + this.items[index].item.pictures[0].img_src  + '")';
+
             },
             globalEvent: function(){
                 var _self = this;
@@ -378,11 +406,14 @@
                     if(isHide){
                         return;
                     }
-                    window.scrollTo({
-                        top: 0,
-                        left: 0,
-                        behavior: 'smooth'
-                    })
+                    _self.backToTop();
+                })
+            },
+            backToTop: function(){
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
                 })
             },
             isScrollHeight: function(){
@@ -405,7 +436,7 @@
                 }, wait);
             }
         }
-        
+        book.bilibiliPic();
         book.globalEvent();
     </script>
 </body>

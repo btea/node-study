@@ -2,7 +2,7 @@
  * websocket socket.io
  */
 // http://www.cnblogs.com/mazg/p/5467960.html
-var ws = new WebSocket('ws//localhost:8080');
+var ws = new WebSocket('ws://localhost:8080');
 ws.open = function(){
     ws.send('Test!');
 };
