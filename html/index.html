@@ -14,12 +14,68 @@
             /* height: 100%; */
         }
         body{
-            background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat;
+            /* background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat; */
             background-size: 100%;
             background-attachment: fixed;
         }
         header{
             text-align: center;
+        }
+        header .color-setting{
+            position: fixed;
+            left: 50px;
+            top: 30px;
+        }
+        header .color-setting em{
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        header .color-setting em.active{
+            border: 2px solid #6cf;
+        }
+        header .pic-switch{
+            position: fixed;
+            right: 50px;
+            top: 30px;
+            width: 30px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: rgba(0,255,255,.3);
+            cursor: pointer;
+        }
+        header .pic-switch .desc{
+            position: absolute;
+            left: -75px;
+            top: -3px;
+            width: 5em;
+            font-size: 12px;
+        }
+        header .pic-switch .icon{
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 10px;
+            width: 0;
+            transition: width .5s;
+            background-color: aqua;
+            border-radius: 5px;
+        }
+        header .pic-switch .icon:after{
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: -3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: antiquewhite;
+        }
+        header .pic-switch.open .icon{
+            width: 30px;
         }
         .search-list{
             margin-top: 20px;
@@ -43,7 +99,8 @@
             font-size: 12px;
             height: 30px;
             cursor: pointer;
-            border: 2px solid #ffffff;
+            margin: 2px 0;
+            /* border: 2px solid #ffffff; */
         }
         .search{
             width: 200px;
@@ -111,9 +168,6 @@
         .container .chapter .text-word{
             width: 1000px;
             margin: 0 auto;
-            /* background: url('https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp') no-repeat;
-            background-size: 100%;
-            background-attachment: fixed; */
         }
         .container .chapter .text-word p{
             text-indent: 2em;
@@ -174,6 +228,11 @@
 </head>
 <body>
     <header>
+        <div class="color-setting"></div>
+        <div class="pic-switch">
+            <div class="desc">壁纸开关</div>
+            <div class="icon"></div>
+        </div>
         <div class="search-list">
             <input type="text" class="search">
             <ul class="list"></ul>
@@ -197,7 +256,7 @@
                 var str =  document.getElementsByClassName('search')[0].value.trim();
                 if(str){
                     book.search(str);
-                    book.initElement();
+                    // book.initElement();
                 }else{
                     alert('书名不能为空');
                 }
@@ -206,13 +265,19 @@
         
         var book = {
             fontFamily: ['楷体','宋体','Franklin Gothic Medium', 'Arial Narrow', 'Arial', 'sans-serif','微软雅黑'],
-            backgroundStyle: [],
+            backgroundStyle: ['rgba(250,245,235,.8)','rgba(245,234,204,.8)','rgba(230,242,230,.8)','rgba(228,241,245,.8)','rgba(245,228,228,.8)','rgba(224,224,224,.8)','rgba(25,27,28,.8)'],
+            initImage: 'https://i0.hdslb.com/bfs/vc/9dfc7150c762a217681677c8385475347a5b71e4.jpg@2000w_1e.webp',
             initElement: function(){
                 this.buttons = this.byClassElement('buttons');
                 this.prev = this.byClassElement('prev');
                 this.next = this.byClassElement('next');
                 this.chaptersTitle = this.byClassElement('title');
+                this.colorSetting = this.byClassElement('color-setting');
+                this.picSwtich = this.byClassElement('pic-switch');
+                this.textContainer = this.byClassElement('text-word');
                 this.buttonListener();
+                this.colorChange();
+                this.bgPicSwitch();
             },
             // 通过class获取元素
             byClassElement: function(name){
@@ -225,6 +290,43 @@
                 });
                 this.next.addEventListener('click', function(){
                     _self.switchCHapter('next');
+                })
+            },
+            colorChange: function(){
+                var str = '',_self = this;
+                this.backgroundStyle.forEach(function(c,i){
+                    str += '<em class="theme-' + i + '" style="background-color:' + c + '"></em>' 
+                });
+                this.colorSetting.innerHTML = str;
+                this.children = this.colorSetting.children;
+                for(let i = 0; i < this.children.length; i++){
+                    this.children[i].addEventListener('click', function(){
+                        var list = this.classList;
+                        if(list.contains('active')){
+                            return;
+                        }else{
+                            this.classList.add('active');
+                            if(_self.colorIndex){
+                               _self.children[_self.colorIndex].classList.remove('active'); 
+                            }
+                        }
+                        _self.colorIndex = i;
+                        _self.textContainer.style.background = _self.backgroundStyle[i];
+                    })
+                }
+            },
+            bgPicSwitch: function(){
+                var list,_self = this;
+                this.picSwtich.addEventListener('click',function(){
+                    list = this.classList.length;
+                    if(list > 1){
+                        this.classList.remove('open');
+                        document.body.style.background = '';
+                    }else{
+                        this.classList.add('open');
+                        document.body.style.backgroundImage = 'url("' + _self.initImage + '")';
+                        document.body.style.backgroundRepeat = 'no-repeat';
+                    }
                 })
             },
             // 上一章/下一章切换
@@ -251,7 +353,6 @@
                 link = links[this.selectChapter].getAttribute('data-link');
                 this.obtainText(link);
                 this.backToTop();
-                // this.randomBg();
             },
             // search according to word
             search: function(word){
@@ -384,15 +485,16 @@
                 xhr.onreadystatechange = function(){
                     if(xhr.readyState === 4 && xhr.status === 200){
                         _self.items = JSON.parse(xhr.responseText).data.items;
-                        _self.randomBg();
                     }
                 }
             },
             randomBg: function(){
                 var len = this.items.length,
-                    index = Math.floor(Math.random()*(len + 1))
+                    index = Math.floor(Math.random()*(len + 1)),
+                    src = this.items[index].item.pictures[0].img_src
                 ;
-                document.body.style.backgroundImage = 'url("' + this.items[index].item.pictures[0].img_src  + '")';
+                this.initImage = src;
+                document.body.style.backgroundImage = 'url("' + src  + '")';
 
             },
             globalEvent: function(){
@@ -438,6 +540,7 @@
         }
         book.bilibiliPic();
         book.globalEvent();
+        book.initElement();
     </script>
 </body>
 </html>
