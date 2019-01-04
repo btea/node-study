@@ -20,11 +20,17 @@
         }
         header{
             text-align: center;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            z-index: 10;
         }
         header .color-setting{
             position: fixed;
             left: 50px;
             top: 30px;
+            z-index: 10;
         }
         header .color-setting em{
             display: inline-block;
@@ -46,6 +52,7 @@
             border-radius: 5px;
             background-color: rgba(0,255,255,.3);
             cursor: pointer;
+            z-index: 10;
         }
         header .pic-switch .desc{
             position: absolute;
@@ -168,6 +175,7 @@
         .container .chapter .text-word{
             width: 1000px;
             margin: 0 auto;
+            padding: 25px;
         }
         .container .chapter .text-word p{
             text-indent: 2em;
@@ -306,7 +314,7 @@
                             return;
                         }else{
                             this.classList.add('active');
-                            if(_self.colorIndex){
+                            if(_self.colorIndex !== undefined){
                                _self.children[_self.colorIndex].classList.remove('active'); 
                             }
                         }
