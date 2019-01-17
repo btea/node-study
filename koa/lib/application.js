@@ -4,10 +4,6 @@ let context = require('./context');
 let request = require('./request');
 let response = require('./response');
 
-
-
-
-
 class Application{
     constructor(){
         this.callbackFunc;
@@ -18,8 +14,11 @@ class Application{
     }
 
     listen(port){
-        let server = http.createServer(this.callback());
+        let server = http.createServer(this.callbackFunc);
         server.listen(port);
+        if(arguments[1] && typeof arguments[1] === 'function'){
+            arguments[1]();
+        }
     }
 
     use(fn){
