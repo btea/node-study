@@ -12,29 +12,29 @@ const options = {
     method: 'GET'
 }
 
-let req = https.request({
-    hostname: 'api.vc.bilibili.com',
-    port: 443,
-    path: '/link_draw/v2/Doc/index?type=recommend&page_num=0&=page_size=45',
-    method: 'GET',
-},function(res){
-    let data = '';
-    res.setEncoding('utf8');
-    res.on('data', function(chunk){
-        data += chunk;
-    });
-    res.on('end', function(){
-        let items = JSON.parse(data).data.items;
-        items.forEach(function(item){
-            let src = item.item.pictures[0].img_src;
-            toSave(src);
-        })
-    })
-})
-req.on('error',function(e){
-    console.log('problem with request:' + e.message);
-})
-req.end();
+// let req = https.request({
+//     hostname: 'api.vc.bilibili.com',
+//     port: 443,
+//     path: '/link_draw/v2/Doc/index?type=recommend&page_num=0&=page_size=45',
+//     method: 'GET',
+// },function(res){
+//     let data = '';
+//     res.setEncoding('utf8');
+//     res.on('data', function(chunk){
+//         data += chunk;
+//     });
+//     res.on('end', function(){
+//         let items = JSON.parse(data).data.items;
+//         items.forEach(function(item){
+//             let src = item.item.pictures[0].img_src;
+//             toSave(src);
+//         })
+//     })
+// })
+// req.on('error',function(e){
+//     console.log('problem with request:' + e.message);
+// })
+// req.end();
 
 
 function toSave(src){
@@ -104,5 +104,5 @@ function dataWrite(name, data){
     })
 }
 
-// toSave(src);
+// toSave(url);
 module.exports = toSave;
