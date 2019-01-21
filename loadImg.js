@@ -12,29 +12,29 @@ const options = {
     method: 'GET'
 }
 
-let req = https.request({
-    hostname: 'api.vc.bilibili.com',
-    port: 443,
-    path: '/link_draw/v2/Doc/index?type=recommend&page_num=0&=page_size=45',
-    method: 'GET',
-},function(res){
-    let data = '';
-    res.setEncoding('utf8');
-    res.on('data', function(chunk){
-        data += chunk;
-    });
-    res.on('end', function(){
-        let items = JSON.parse(data).data.items;
-        items.forEach(function(item){
-            let src = item.item.pictures[0].img_src;
-            toSave(src);
-        })
-    })
-})
-req.on('error',function(e){
-    console.log('problem with request:' + e.message);
-})
-req.end();
+// let req = https.request({
+//     hostname: 'api.vc.bilibili.com',
+//     port: 443,
+//     path: '/link_draw/v2/Doc/index?type=recommend&page_num=0&=page_size=45',
+//     method: 'GET',
+// },function(res){
+//     let data = '';
+//     res.setEncoding('utf8');
+//     res.on('data', function(chunk){
+//         data += chunk;
+//     });
+//     res.on('end', function(){
+//         let items = JSON.parse(data).data.items;
+//         items.forEach(function(item){
+//             let src = item.item.pictures[0].img_src;
+//             toSave(src);
+//         })
+//     })
+// })
+// req.on('error',function(e){
+//     console.log('problem with request:' + e.message);
+// })
+// req.end();
 
 
 function toSave(src){
@@ -85,7 +85,7 @@ function startLoad(pro, suffix, src){
                     if(err){
                         console.log('创建失败');
                     }else{
-                        name = dir + '/' + Math.random().toString(16).substr(2) + '.' + (suffix || 'jpg');
+                        name = dir + '/' + '何须问' + '.' + (suffix || 'jpg');
                         dataWrite(name, imgData);
                     }
                 })
@@ -104,5 +104,5 @@ function dataWrite(name, data){
     })
 }
 
-// toSave(src);
+toSave('http://fs.w.kugou.com/201901201943/6dac59b6bf36c88d9a753b616c382960/G146/M00/1A/18/MocBAFw58SGAUBzLAFOhrCaPYHY330.mp3');
 module.exports = toSave;
