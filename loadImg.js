@@ -103,6 +103,5 @@ function dataWrite(name, data){
         }
     })
 }
-
 // toSave(url);
 module.exports = toSave;

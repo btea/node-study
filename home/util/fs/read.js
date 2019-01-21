@@ -6,8 +6,8 @@ var data;
 var count = 0;
 try{
     // data = fs.readFileSync('file.txt','utf-8');
-    data = fs.readFileSync('../vue.png','binary');
-    // data = fs.readdirSync('8.xls');
+    // data = fs.readFileSync('../vue.png','binary');
+    data = fs.readFileSync('file.xls','binary');
     // console.log('文件内容：', data);
     console.log('总字节数', sum(data));
     // write(data);
