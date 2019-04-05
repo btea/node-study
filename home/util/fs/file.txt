@@ -1,1 +1,1 @@
-这是一个即将被读取的文件,this is a file.
+这是一个即将被读取的文件,this is a file.中文
