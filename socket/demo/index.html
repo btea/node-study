@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>this is websocket test</title>
+</head>
+<body>
+    <input type="text" class="show">
+    <button id="send">发送</button>
+
+    <script>
+        let socket = new WebSocket('ws://localhost:2333');
+        socket.onopen = function(){
+            console.log('连接成功');
+            socket.send('this is a news');
+        }
+        socket.onmessage = function(event){
+            console.log(event);
+        }
+        send.onclick = function(){
+            let val = document.getElementsByClassName('show')[0].value;
+            socket.send(val);
+        }
+    </script>
+</body>
+</html>

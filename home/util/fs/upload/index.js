@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const request = require('superagent');
+const querystring = require('querystring');
 let url = 'http://upos-hz-mirrorks3.acgvideo.com/dspxcode/m190121ws1dvpsa8qc87dgs8qs8nqus6-1-56.mp4?um_deadline=1548072049&rate=500000&oi=2003138365&um_sign=36943318d1b7498715b51b6c9ab883cc&gen=dsp&wsTime=1548072049&platform=html5';
 
 http.createServer(function(request, response){
@@ -19,15 +20,23 @@ http.createServer(function(request, response){
     if(/^\/upload/.test(url)){
         // let obj = '', name = url.split('?')[1].split('=')[1], $res = {};
         let $data = '';
-        console.log(request);
-        return;
+        // console.log(request);
+        // return;
         request.setEncoding('binary');
         request.on('data', function(data){
             $data += data;
-            console.log
+            // console.log
         });
         request.on('end', function(){
-            console.log($data);
+            // console.log($data);
+            let data =  $data.replace(/%/g, '%25'), object, arr;
+            data = decodeURI(data);
+            object = querystring.parse(data);
+            // console.log(typeof object);
+            // console.log(Object.entries(object)[0]);
+            arr = Object.entries(object).slice(1);
+            data = arr.join('');
+            // return;
             // var base64 = obj.replace(/^data:image\/\w+;base64,/, "");//去掉图片base64码前面部分data:image/png;base64
             // var dataBuffer = new Buffer(base64, 'base64'), path = './' + new Date().getTime() + '.png'; //把base64码转成buffer对象，
             // // fs.writeFile(path, dataBuffer, function(err){
@@ -41,8 +50,8 @@ http.createServer(function(request, response){
             // //         response.end(JSON.stringify($res));
             // //     }
             // // })
-            // let path = './' + name;
-            fs.writeFile(path, $data, 'binary', function(err){
+            let path = './' + Date.now() + '.jpg', $res = {};
+            fs.writeFile(path, data, 'binary', function(err){
                 if(err){
                     console.log('load fail');
                 }else{
