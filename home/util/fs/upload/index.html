@@ -11,6 +11,12 @@
     <button class="upload">上传</button>
     <div class="progress"></div>
     <a href="" id="download">下载</a>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        用户：<input type="text" name="username"><br>
+        密码：<input type="password" name="password"><br>
+        <input type="file" name="f1">
+        <input type="submit" value="提交">
+      </form>
     <script>
         var upload = document.getElementsByClassName('upload')[0],
             progress = document.getElementsByClassName('progress')[0],
@@ -22,9 +28,9 @@
             fileList = this.files;
         })
         upload.addEventListener('click',function(){
-            if(!fileList){
-                return;
-            }
+            // if(!fileList){
+                // return;
+            // }
             // let reader = new FileReader();
             // reader.onload = function(evt){
             //     files = evt.target.result;
@@ -56,7 +62,8 @@
             form.append('file', fileList[0]);
             let xhr = new XMLHttpRequest();
             xhr.open('post','/upload');
-            xhr.setRequestHeader('Content-Type','application/x-www-urlencodee');
+            xhr.setRequestHeader('Content-Type','application/x-www-urlencoded');
+            // xhr.setRequestHeader('Content-type', 'multipart/form-data');
             xhr.onreadystatechange = function(){
                 console.log(xhr.response);
                 if(xhr.readyState === 4 && xhr.status === 200){

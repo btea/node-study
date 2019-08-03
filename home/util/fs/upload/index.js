@@ -1,8 +1,11 @@
 const http = require('http');
 const fs = require('fs');
-const request = require('superagent');
+// const request = require('superagent');
 const querystring = require('querystring');
-let url = 'http://upos-hz-mirrorks3.acgvideo.com/dspxcode/m190121ws1dvpsa8qc87dgs8qs8nqus6-1-56.mp4?um_deadline=1548072049&rate=500000&oi=2003138365&um_sign=36943318d1b7498715b51b6c9ab883cc&gen=dsp&wsTime=1548072049&platform=html5';
+const multer = require('multer');
+// let url = 'http://upos-hz-mirrorks3.acgvideo.com/dspxcode/m190121ws1dvpsa8qc87dgs8qs8nqus6-1-56.mp4?um_deadline=1548072049&rate=500000&oi=2003138365&um_sign=36943318d1b7498715b51b6c9ab883cc&gen=dsp&wsTime=1548072049&platform=html5';
+
+let upload = multer({dest: './files'});
 
 http.createServer(function(request, response){
     let url = request.url;
@@ -20,22 +23,49 @@ http.createServer(function(request, response){
     if(/^\/upload/.test(url)){
         // let obj = '', name = url.split('?')[1].split('=')[1], $res = {};
         let $data = '';
-        // console.log(request);
-        // return;
-        request.setEncoding('binary');
+        // request.setEncoding('binary');
+        console.log(request.headers['content-type']);
+        // const isFile = mime(req) === 'multipart/form-data';
+        // if (hasBody(req) && isFile) {
+            var buffers = [];
+            request.on('data', function (chunk) {
+                buffers.push(chunk);
+            });
+            request.on('end', function () {
+                // 处理文件名
+                let requestBody = Buffer.concat(buffers).toString('binary');
+                let file = querystring.parse(requestBody, '\r\n', ': ')
+                let fileInfo = file['Content-Disposition']
+                fileInfo = Buffer.from(fileInfo, 'binary').toString()
+                let { filename } = querystring.parse(fileInfo, '; ', '=')
+                filename = filename.slice(1, -1)
+                filename = `./static/${filename}`
+                // 处理内容
+                let boundary = req.headers['content-type'].split('; ')[1].replace('boundary=', '');
+                let contentType = file['Content-Type']
+                if (!contentType.includes('image')) return
+                let upperBoundary = requestBody.indexOf(contentType) + contentType.length;
+                let shorterData = requestBody.substring(upperBoundary)
+                let binaryDataAlmost = shorterData.trim()
+                let binaryData = binaryDataAlmost.substring(0, binaryDataAlmost.indexOf(`--${boundary}--`))
+                // 写入文件
+                fs.writeFile(filename, binaryData, 'binary', (err) => {
+                    if (err) {
+                    console.log('上传失败')
+                    } else {
+                    console.log('上传成功', filename)
+                    }
+                })
+            });
+            return;
+        // }
         request.on('data', function(data){
             $data += data;
             // console.log
         });
         request.on('end', function(){
             // console.log($data);
-            let data =  $data.replace(/%/g, '%25'), object, arr;
-            data = decodeURI(data);
-            object = querystring.parse(data);
-            // console.log(typeof object);
-            // console.log(Object.entries(object)[0]);
-            arr = Object.entries(object).slice(1);
-            data = arr.join('');
+            var data = $data;
             // return;
             // var base64 = obj.replace(/^data:image\/\w+;base64,/, "");//去掉图片base64码前面部分data:image/png;base64
             // var dataBuffer = new Buffer(base64, 'base64'), path = './' + new Date().getTime() + '.png'; //把base64码转成buffer对象，
