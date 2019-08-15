@@ -6,6 +6,18 @@
  *    2、如何访问安全证书不受信任的网站。（以12306为例子）
  */
 
+var options = {
+    // nodejs搭建https服务器  秘钥生成步骤https://www.cnblogs.com/xbblogs/p/9367764.html
+    // privatekey.pem: 私钥
+    // certrequest.csr: CSR证书签名
+    // certificate.pem: 证书文件
+    // key: fs.readFileSync('./privatekey.pem'),
+    // cert: fs.readFileSync('./certificate.pem')
+};
+
+https.createServer(options, (req, res) => {
+    res,end();
+}).listen(2333);
 
 var https = require('https');
 
