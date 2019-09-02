@@ -42,7 +42,11 @@
             
         })
 
+        // file上传
         function postdata(data){
+            /**
+             * @param data  base64图片
+            */
             let xhr = new XMLHttpRequest();
             xhr.open('POST','/upload?files=' + fileList[0].name);
             xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
@@ -57,17 +61,23 @@
             xhr.send(data.toString());
         }
 
+        // formData上传
         function postFormData(){
             let form = new FormData();
             form.append('file', fileList[0]);
             let xhr = new XMLHttpRequest();
+<<<<<<< HEAD
             xhr.open('post','/upload');
             xhr.setRequestHeader('Content-Type','application/x-www-urlencoded');
             // xhr.setRequestHeader('Content-type', 'multipart/form-data');
+=======
+            xhr.open('post','/upload',true);
+            xhr.setRequestHeader('Content-Type','multipart/form-data');
+>>>>>>> 60f0a712e71d9e7a2eca2aef0def228a495c0d2e
             xhr.onreadystatechange = function(){
                 console.log(xhr.response);
                 if(xhr.readyState === 4 && xhr.status === 200){
-
+                    console.log(xhr);
                 }
             };
             xhr.send(form);

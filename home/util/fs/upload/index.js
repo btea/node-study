@@ -1,12 +1,16 @@
 const http = require('http');
 const fs = require('fs');
 // const request = require('superagent');
+<<<<<<< HEAD
 const querystring = require('querystring');
 const multer = require('multer');
 // let url = 'http://upos-hz-mirrorks3.acgvideo.com/dspxcode/m190121ws1dvpsa8qc87dgs8qs8nqus6-1-56.mp4?um_deadline=1548072049&rate=500000&oi=2003138365&um_sign=36943318d1b7498715b51b6c9ab883cc&gen=dsp&wsTime=1548072049&platform=html5';
 const getName = require('./getName');
 
 let upload = multer({dest: './files'});
+=======
+// let url = 'http://upos-hz-mirrorks3.acgvideo.com/dspxcode/m190121ws1dvpsa8qc87dgs8qs8nqus6-1-56.mp4?um_deadline=1548072049&rate=500000&oi=2003138365&um_sign=36943318d1b7498715b51b6c9ab883cc&gen=dsp&wsTime=1548072049&platform=html5';
+>>>>>>> 60f0a712e71d9e7a2eca2aef0def228a495c0d2e
 
 http.createServer(function(request, response){
     let url = request.url;
@@ -22,6 +26,7 @@ http.createServer(function(request, response){
         response.end();
     }
     if(/^\/upload/.test(url)){
+<<<<<<< HEAD
         // let obj = '', name = url.split('?')[1].split('=')[1], $res = {};
         let $data = '';
         // request.setEncoding('binary');
@@ -79,29 +84,50 @@ http.createServer(function(request, response){
             });
             return;
         // }
+=======
+        // console.log(url);
+        // console.log(request);
+        // return;
+        // let name = url.split('?')[1].split('=')[1], $res = {};
+        
+        let $data = '', $res = {};
+        console.log(request.file);
+        console.log(request);
+        return;
+        // request.setEncoding('binary');
+        request.setEncoding('utf-8');
+>>>>>>> 60f0a712e71d9e7a2eca2aef0def228a495c0d2e
         request.on('data', function(data){
             $data += data;
-            // console.log
         });
         request.on('end', function(){
             // console.log($data);
+<<<<<<< HEAD
             var data = $data;
             // return;
             // var base64 = obj.replace(/^data:image\/\w+;base64,/, "");//去掉图片base64码前面部分data:image/png;base64
+=======
+            // var base64 = $data.replace(/^data:image\/\w+;base64,/, "");//去掉图片base64码前面部分data:image/png;base64
+>>>>>>> 60f0a712e71d9e7a2eca2aef0def228a495c0d2e
             // var dataBuffer = new Buffer(base64, 'base64'), path = './' + new Date().getTime() + '.png'; //把base64码转成buffer对象，
-            // // fs.writeFile(path, dataBuffer, function(err){
-            // //     if(err){
-            // //         console.log('load fail');
-            // //     }else{
-            // //         console.log('load success');
-            // //         $res.code = 200;
-            // //         $res.msg = '上传完成';
-            // //         $res.url = path;
-            // //         response.end(JSON.stringify($res));
-            // //     }
-            // // })
-            let path = './' + Date.now() + '.jpg', $res = {};
-            fs.writeFile(path, data, 'binary', function(err){
+            // fs.writeFile(path, dataBuffer, function(err){
+            //     if(err){
+            //         console.log('load fail');
+            //     }else{
+            //         console.log('load success');
+            //         $res.code = 200;
+            //         $res.msg = '上传完成';
+            //         $res.url = path;
+            //         response.end(JSON.stringify($res));
+            //     }
+            // })
+
+
+
+
+            let path = './' + Date.now() + '.jpg', readStream, writeSteam;
+                
+            fs.writeFile(path, $data, 'binary', function(err){
                 if(err){
                     console.log('load fail');
                 }else{

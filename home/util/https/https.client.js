@@ -20,6 +20,18 @@ https.createServer(options, (req, res) => {
 }).listen(2333);
 
 var https = require('https');
+var options = {
+    // nodejs搭建https服务器  秘钥生成步骤https://www.cnblogs.com/xbblogs/p/9367764.html
+    // privatekey.pem: 私钥
+    // certrequest.csr: CSR证书签名
+    // certificate.pem: 证书文件
+    // key: fs.readFileSync('./privatekey.pem'),
+    // cert: fs.readFileSync('./certificate.pem')
+};
+
+https.createServer(options, (req, res) => {
+    res,end();
+}).listen(2333);
 
 https.get('https://www.baidu.com',function(res){
     console.log('status code:' + res.statusCode);
