@@ -4,6 +4,7 @@ const fs = require('fs');
 const querystring = require('querystring');
 const multer = require('multer');
 // let url = 'http://upos-hz-mirrorks3.acgvideo.com/dspxcode/m190121ws1dvpsa8qc87dgs8qs8nqus6-1-56.mp4?um_deadline=1548072049&rate=500000&oi=2003138365&um_sign=36943318d1b7498715b51b6c9ab883cc&gen=dsp&wsTime=1548072049&platform=html5';
+const getName = require('./getName');
 
 let upload = multer({dest: './files'});
 
@@ -24,7 +25,26 @@ http.createServer(function(request, response){
         // let obj = '', name = url.split('?')[1].split('=')[1], $res = {};
         let $data = '';
         // request.setEncoding('binary');
-        console.log(request.headers['content-type']);
+        request.on('data', chunk => {
+            $data += chunk;
+        });
+        request.on('end', () => {
+            let arr = $data.split(/\r\n/g);
+            let params = arr[1];
+            let type = arr[2];
+            let v = arr[4];
+            let keys = params.split(';');
+            let n = getName(keys, type);
+            response.end(v);
+            fs.writeFile(n, v, (err) => {
+                if (err) {
+                    console.log('上传失败', err)
+                } else {
+                    console.log('上传成功');
+                }
+            })
+        })
+        return
         // const isFile = mime(req) === 'multipart/form-data';
         // if (hasBody(req) && isFile) {
             var buffers = [];
@@ -41,7 +61,7 @@ http.createServer(function(request, response){
                 filename = filename.slice(1, -1)
                 filename = `./static/${filename}`
                 // 处理内容
-                let boundary = req.headers['content-type'].split('; ')[1].replace('boundary=', '');
+                let boundary = request.headers['content-type'].split('; ')[1].replace('boundary=', '');
                 let contentType = file['Content-Type']
                 if (!contentType.includes('image')) return
                 let upperBoundary = requestBody.indexOf(contentType) + contentType.length;

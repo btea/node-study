@@ -40,7 +40,15 @@ const styles = {
     blue: ["\x1b[34;4m"],
     magenta: ["\x1b[35m"],
     cyan: ["\x1b[36;4m"],
-    white: ["\x1b[37m"]
+    white: ["\x1b[37m"],
+    blackBg: ["\x1b[40;4m]"],
+    redBg: ["\x1b[41m]"],
+    greenBg: ["\x1b[42;4;1;3m]"],
+    yellowBg: ["\x1b[43m"],
+    blueBg: ["\x1b[44;4m"],
+    magentaBg: ["\x1b[45m"],
+    cyanBg: ["\x1b[46;4m"],
+    whiteBg: ["\x1b[47m"],
 }
 
 Object.keys(styles).forEach(sty => {
@@ -52,7 +60,7 @@ Object.keys(styles).forEach(sty => {
     }
 })
 
-console.log(str.green());
+// console.log(str.green());]
 
 console.log('abc'.black());
 console.log('abc'.red());
@@ -63,7 +71,7 @@ console.log('abc'.magenta());
 console.log('abc'.cyan());
 console.log('abc'.white());
 
-// console.log("\033[36;7;92mhello"); //  控制字符[红色文字;绿色背景结束符号hello
+console.log("\033[36;7;92mhello"); //  控制字符[红色文字;绿色背景结束符号hello
 // console.log("\033[0m");          //  重置颜色修饰
 // console.log("\033[93mworld");    //  控制字符[黄色文字结束符号world
 // // console.log("\033[m");          //  重置颜色修饰
@@ -72,11 +80,11 @@ console.log('abc'.white());
 // console.log("\x1b[33mworld");
 // console.log("\x1b[m");
 
-// function getRedTextGreenBg(text) {
-//     return '\x1b[31;42m' + text + '\x1b[0m';
-// }
+function getRedTextGreenBg(text) {
+    return '\x1b[31;42m' + text + '\x1b[0m';
+}
   
-// console.log(getRedTextGreenBg('hello world'));
+console.log(getRedTextGreenBg('hello world'));
 // console.log(getRedTextGreenBg('hey'));
 // console.log('\x1B[36m%s\x27[0m', 'info');
 
