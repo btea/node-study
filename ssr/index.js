@@ -1,6 +1,7 @@
+
 let add = document.getElementsByClassName('add')[0];
-add.onclick = function(){
+add.addEventListener('click', () => {
     let el = document.createElement('div');
-    el.innerText = '这是新添加的标签';
+    el.innerText = '按钮添加的内容';
     document.body.appendChild(el);
-}
+})

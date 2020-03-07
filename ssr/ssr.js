@@ -1,19 +1,21 @@
 const http = require('http');
 const fs = require('fs');
-
 http.createServer(function(request, response){
     let url = request.url;
+    response.setHeader("Content-type", "text/html;charset=UTF-8");
     if(url === '/'){
-        response.setHeader('Content-type','text/html;charset=utf-8');
         response.end(`
-            <html>
-                <title>ssr</title>
-                <body>
-                    <h1>这是一个标题</h1>
-                    <button class="add">添加</button>
-                    <script src="./index.js"></script>
-                </body>
-            </html>
+        <html>
+        <head>
+          <title>hello</title>
+        </head>
+        <body>
+          <h1 style="color: aqua; font-size: 25px;">hello</h1>
+          <p>world</p>
+          <button class="add">添加</button>
+          <script src="./index.js"></script>
+        </body>
+      </html>
         `)
     }
     if(url === '/index.js'){
