@@ -1,11 +1,10 @@
 const http = require('http');
 const fs = require('fs');
 
-
 http.createServer(function(request, response){
     let url = request.url;
-    response.setHeader('Content-type','text/html;charset=utf-8');
     if(url === '/'){
+        response.setHeader('Content-type','text/html;charset=utf-8');
         response.end(`
             <html>
                 <title>ssr</title>
@@ -18,6 +17,7 @@ http.createServer(function(request, response){
         `)
     }
     if(url === '/index.js'){
+        response.setHeader('Content-type','text/x-javascript;charset=utf-8');
         fs.readFile('.' + url, (err, str) => {
             response.end(str);
         })
