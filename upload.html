@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>upload</title>
+</head>
+
+<body>
+    <input type="file" class="file">
+    <script>
+        const el = document.getElementsByClassName('file')[0]
+        el.addEventListener('change', () => {
+            const file = el.files[0]
+            const formdata = new FormData()
+            formdata.append('file', file);
+            upload(formdata)
+        })
+        function upload(params) {
+            let xhr = new XMLHttpRequest()
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.response)
+                }
+            }
+            xhr.open('post', 'http://192.168.50.166:2233/upload')
+            // formdata格式上传文件，请求头不需设置，让浏览器自动设置
+            // 参考 https://github.com/axios/axios/blob/e9965bfafc82d8b42765705061b9ebe2d5532493/lib/adapters/xhr.js#L19
+            xhr.send(params);
+        }
+    </script>
+</body>
+
+</html>
