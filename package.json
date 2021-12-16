@@ -9,7 +9,7 @@
   "dependencies": {
     "async": "^2.6.1",
     "babel-register": "^6.26.0",
-    "busboy": "^0.2.14",
+    "busboy": "^0.3.0",
     "chai": "^4.2.0",
     "chalk": "^2.4.1",
     "cheerio": "^1.0.0-rc.2",
